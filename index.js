@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Enable CORS for all routes
+// Enable CORS for all route
 app.use(cors());
 
 // Endpoint to execute Node.js code
