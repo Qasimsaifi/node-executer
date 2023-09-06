@@ -15,13 +15,16 @@ app.post('/execute', (req, res) => {
 
   exec(`node -e "${code}"`, (error, stdout, stderr) => {
     if (error) {
-      return res.status(500).json({ error: error.message });
+      console.error('Execution Error:', error);
+      return res.status(500).json({ error: 'An error occurred while executing the code.' });
     }
 
     if (stderr) {
-      return res.status(400).json({ error: stderr });
+      console.error('Script Error:', stderr);
+      return res.status(400).json({ error: 'There was an error in your code.' });
     }
 
+    console.log('Execution Result:', stdout);
     res.status(200).json({ output: stdout });
   });
 });
