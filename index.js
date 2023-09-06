@@ -1,10 +1,13 @@
-// app.js
 const express = require('express');
 const { exec } = require('child_process');
+const cors = require('cors'); // Import the cors middleware
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Endpoint to execute Node.js code
 app.post('/execute', (req, res) => {
