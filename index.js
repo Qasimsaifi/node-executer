@@ -1,31 +1,28 @@
 const express = require('express');
 const { exec } = require('child_process');
-const cors = require('cors'); // Import the cors middleware
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 app.use(express.json());
 
-// Enable CORS for all route
-app.use(cors());
-
-// Endpoint to execute Node.js code
 app.post('/execute', (req, res) => {
-  const { code } = req.body;
+  const pythonCode = req.body.code; // Assuming you receive the Python code in the request body
 
-  exec(`node -e "${code}"`, (error, stdout, stderr) => {
+  exec(`python -c "${pythonCode}"`, (error, stdout, stderr) => {
     if (error) {
-      console.error('Execution Error:', error);
-      return res.status(500).json({ error: 'An error occurred while executing the code.' });
+      console.error(`Error: ${error.message}`);
+      res.status(500).json({ error: 'An error occurred while executing Python code.' });
+      return;
     }
 
     if (stderr) {
-      console.error('Script Error:', stderr);
-      return res.status(400).json({ error: 'There was an error in your code.' });
+      console.error(`Python Error: ${stderr}`);
+      res.status(400).json({ error: 'There was an error in the Python code.' });
+      return;
     }
 
-    console.log('Execution Result:', stdout);
-    res.status(200).json({ output: stdout });
+    console.log(`Python Output: ${stdout}`);
+    res.json({ output: stdout });
   });
 });
 
